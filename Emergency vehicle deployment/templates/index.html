@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🚨 Emergency Vehicle Deployment</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 70%;
+            max-width: 800px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #e53935;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-top: 15px;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #e53935;
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #d32f2f;
+        }
+
+        #result {
+            white-space: pre-wrap;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 Emergency Deployment</h1>
+
+        <label for="type">Emergency Type:</label>
+        <select id="type">
+            <option>Fire</option>
+            <option>Medical</option>
+            <option>Crime</option>
+        </select>
+
+        <label for="location">Location:</label>
+        <select id="location">
+            <option>Downtown</option>
+            <option>Uptown</option>
+            <option>Industrial Area</option>
+            <option>Suburb A</option>
+            <option>Suburb B</option>
+            <option>Tech Park</option>
+            <option>University Area</option>
+            <option>Old Town</option>
+            <option>New City</option>
+            <option>Harbor</option>
+            <option>Mall Area</option>
+            <option>Residential Zone</option>
+        </select>
+
+        <button onclick="sendRequest()">🚨 Deploy Emergency Vehicle</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function sendRequest() {
+            const type = document.getElementById("type").value;
+            const location = document.getElementById("location").value;
+
+            const res = await fetch("/deploy", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type, location })
+            });
+
+            const data = await res.json();
+            if (data.status === "success") {
+                document.getElementById("result").innerText =
+                    `🚨 ${data.type} vehicle deployed!\n` +
+                    `From: ${data.source_zone}\n` +
+                    `To: ${data.destination_zone}\n` +
+                    `Time: ${data.travel_time} minutes\n` +
+                    `Path: ${data.path.join(" → ")}`;
+            } else {
+                document.getElementById("result").innerText = `❌ Error: ${data.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
